@@ -1,0 +1,3 @@
+Simply put the "BMux" folder in your Arduino "libraries" folder.
+
+Warning: this library will work only with the Arduino IDE 1.6.x and newer.
