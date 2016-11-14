@@ -34,7 +34,7 @@
 
 #include <BMux.h>
 
-#define ANALOG_PIN A1
+#define ANALOG_PIN A2
 
 // First define the callback functions for the buttons action handling,
 // in this example just a Serial notification
@@ -86,7 +86,7 @@ Button b5 = Button(860, &b5Click, &b5Hold, 5000);
 
 void setup() {
     Serial.begin(9600);
-    Serial.println("Testing your Analog buttons 2");
+    Serial.println("Testing your Analog Button Muxer Library");
 
     abm.init(ANALOG_PIN, 5, 20);
     abm.add(b1);
@@ -103,7 +103,7 @@ void loop() {
     // To configure the MAX/Min values for each button: uncomment the following
     // line and attach a serial terminal to see the data and note down the values
 
-    //configure();
+    configure();
 }
 
 void configure() {

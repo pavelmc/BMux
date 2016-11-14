@@ -49,6 +49,8 @@
 
 
 // Take into account that by default we use a sampling interval of 50Hz
+// but you can change that setting by declaring a external var before
+// loading the lib in your code, BMUX_SAMPLING is the var
 
 #include "Arduino.h"
 
@@ -59,11 +61,15 @@
     #define BUTTONS_COUNT 8
 #endif
 
+#ifndef BMUX_SAMPLING
+    #define BMUX_SAMPLING 50    // how many times per second will be sampled
+#endif
+
 class Button {
 public:
     uint16_t value;         // to hold a max of 1023
     uint16_t duration;      // in msecs, max is 65.5 seconds
-    uint8_t counter;        // in sample intervals of 50Hz (20 msecs)
+    uint8_t counter;        // in sample intervals of BMUX_SAMPLING
     boolean isHeld;         // flag to sign that the button is held
 
     Button() {};
@@ -87,7 +93,7 @@ private:
 
 class BMux {
 private:
-    uint8_t debounce;       // in sample intervals
+    uint8_t debounce;       // in sample intervals of BMUX_SAMPLING
     uint32_t time;          // time stamp to define the sampling interval
     uint8_t margin;         // max is 255, which is bigger than we need
     uint8_t pin;            // the analog pin

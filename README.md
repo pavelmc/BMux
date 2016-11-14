@@ -8,7 +8,9 @@ Acctually we have the following features implemented:
 
 * Up to 8 buttons in a single Analog pin _(by default limited to 8 to keep firmware footprint low, it's tunable in software)_.
 * Secondary functions (press & hold) in each button, configured on demand.
-* Intuitive behavior in the case you held a button pressed (_on the original AnalogButtons library when you held a button you got two events, first a click and then a hold one, that's not acceptable for some uses._)
+* Intuitive behavior in the case you held a button pressed (_on the original AnalogButtons library when you held a button you got two events, first a click and then a hold one, that's not intuitive._)
+* Single click event (the click does not repeat itself)
+* Hold event will repeat at a pace defined by the hold limit (if you keep the button pressed long enough)
 
 ## Inspiration ##
 
@@ -21,7 +23,20 @@ This library is based in the following source codes:
 
 The first thing to do is determine how many buttons you will manage in the analog pin. By default max number of buttons per pin is limited to 8 to limit memory consumption (you can declare less or more buttons as your need commands), it can be controlled defining the `BUTTONS_COUNT` macro **before** including this library.
 
-You then create an instance of the lib to be configured and user later in our code; like this:
+It's time to play with your hardware, to setup a resistor network you have two main variants:
+
+* As a fixed resistors stair values
+* As a multiple resistors values
+
+The two main configuration can be seen on the file Resistors_variants.png in the project folder.
+
+**Note:** _In theory you can declare up to ~21 buttons with a +/- 20 units of tolerance and a guard zone of 10 units_
+
+_That means that you have to setup your resistors in a way that the specific central values are at least 3 units of tolerance away from each other, if not you will have problems_
+
+_For example if your resistor network yields a values of 256, 270 and 350 and you use the default 10 units of tolerance the first two will make you in trouble as 270 - 256 = 14; as you can see 14 is less than the recommended 30 units (3 * 10)_
+
+Now you create an instance of the lib at the beginning of your code; like this:
 
 ```
 BMux abm;

@@ -48,7 +48,6 @@ void BMux::init(uint8_t pin, uint8_t debounce, uint8_t margin) {
     this->pin = pin;
     this->debounce = debounce;
     this->margin = margin;
-    pinMode(pin, INPUT);
 }
 
 void BMux::add(Button button) {
@@ -58,21 +57,36 @@ void BMux::add(Button button) {
 }
 
 void BMux::check() {
-    // In case this function gets called very frequently avoid sampling the analog pin too often: max frequency is 50Hz
-    if (millis() - time > 20) {
+    // In case this function gets called very frequently avoid sampling the
+    // analog pin too often: default (max) frequency is 50Hz
+    if (millis() - time > 1000 / BMUX_SAMPLING) {
         time = millis();
         uint16_t reading = analogRead(pin);
         uint16_t msec = 0;
+        uint16_t min = 0;
+        uint16_t max = 0;
 
         // we changed the strategy here, all events will be emitted on button release
         for (uint8_t i = 0; i < buttonsCount; i++) {
-            if (reading >= buttons[i].value - margin && reading <= buttons[i].value + margin) {
+            // low limit checking (this led to overflows in the past)
+            if (buttons[i].value <= margin) {
+                min = 0;
+            } else {
+                min = buttons[i].value - margin;
+            }
+
+            // max limit check
+            max = buttons[i].value + margin;
+            if (max > 1023) max = 1023;
+
+            // checking
+            if (reading >= min && reading <= max) {
                 // just increment the count of the pressed buttons
                 buttons[i].counter += 1;
 
                 // check for button held & still pressed
                 msec = buttons[i].counter;
-                msec *= 20;
+                msec *= 1000 / BMUX_SAMPLING;
                 if (msec >= buttons[i].duration) {
                     buttons[i].held();
                     buttons[i].counter = 0;
