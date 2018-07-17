@@ -6,15 +6,15 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-BMux  KEYWORD1
-Button  KEYWORD1
+BMux	KEYWORD1
+Button	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
-add KEYWORD2
-check   KEYWORD2
+add	KEYWORD2
+check	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
